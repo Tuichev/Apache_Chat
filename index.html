@@ -1,0 +1,147 @@
+﻿<html >
+  <head>
+    <title>Онлайн-Чат</title>
+    <!-- подключаем библиотеку jquery -->
+    <script type="text/javascript" src="/jquery.js"></script>
+    <script type="text/javascript">
+	var flag=false;
+    function show() {
+        // выводим сообщения в блок #messages
+        $.ajax({//метод Осуществляет запрос к серверу без перезагрузки страницы.
+            url: 'show.php',// адрес запроса, как часть настроек
+            timeout: 10000, // время ожидания загрузки сообщений 10 секунд (или 10000 миллисекунд)
+            success: function(data) {
+                $('#messages').html(data);//строка которую нужно вставить в елемент
+            },
+            error: function() {
+                $('#messages').html("Не удалось загрузить сообщения");
+            }
+        });
+	
+	
+    }
+	
+	
+	
+     function getRandomColor() {
+		var letters = '0123456789ABCDEF'.split('');
+		var color = '#';
+		for (var i = 0; i < 6; i++ ) {
+			color += letters[Math.floor(Math.random() * 16)];
+		}
+		return color;
+	}
+//input type='hidden' name='col' value='$ttt'>
+	var myColour = getRandomColor();
+	
+    function send() {
+        // функция отправки сообщения
+        var sender = $('#sender').val(); // отправитель, достаем значение из елемента sender
+	 
+    	
+		
+		sender = '<font color="' + myColour + '">' + sender + '</font>';
+		//console.log(sender);
+		
+        var message = $('#message').val(); // сообщение
+        //var - local, # - element, $- кэш, глоб пер. сод. джиквери об.	
+        if(sender.length > 31 && message.length > 0) { // проверка полей "Имя" и "Сообщение"
+            $.ajax({
+                url: 'send.php',
+                type: 'post',//не кэшируються(dont use RAM)
+                timeout: 10000, // время ожидания отправки сообщения 10 сек.
+                data: {'sender': sender, 'message': message},
+                success: function(data) {
+                    document.getElementById('message').value = ""; // удаляем содержимое поля "Сообщение", если сообщение было успешно отправлено
+                    $('#send_message_result').html("");
+                },
+                error: function() {
+                    $('#send_message_result').html("Не удалось отправить сообщение");
+                }
+            });
+			 document.getElementById('player').play();
+	//	var audio = new Audio();
+		//audio.src = 'sonic_ring.mp3';
+	//	audio.autoplay = true;
+	//	var interval = 1000;
+	flag=true;
+        } else if(sender.length <=31) {
+            $('#send_message_result').html("Имя должно состоять минимум из 3 букв!");
+			if(message.length == 0) $('#send_message_result').html("Имя должно состоять минимум из 3 букв!<br>Введите сообщение!");
+        } else if(message.length == 0) {
+            $('#send_message_result').html("Введите сообщение!");
+			
+        }
+		
+    }
+    
+   var interval = 1000; // количество миллисекунд для авто-обновления сообщений (1 секунда = 1000 миллисекунд)
+    
+    show();
+    
+    setInterval('show()', interval);
+	function random_html_color()
+{
+    return sprintf( '#%02X%02X%02X', rand(0, 255), rand(0, 255), rand(0, 255) );
+}
+
+    </script>
+
+	<style>
+	.blockkk{
+	width:100%;
+word-wrap: break-word;
+	}
+	
+	</style>
+
+  </head>
+  <body>
+    <h1>Чат анонимных программистов, или как стать интровертом</h1>
+    Имя<br>
+    <input type="text" id="sender"><br><br>
+    
+    Сообщение<br>
+<script type="text/javascript">
+function usl(d, e)
+{
+  
+  if(  e.keyCode==13 && e.ctrlKey )document.getElementById('message').value += "\n";  
+}
+function test(d, e)
+{
+  if( e.keyCode == 13)
+  {
+  if(d=="\n")document.getElementById('message').value= "";
+  send();
+ 
+  }
+}
+//contenteditable="true"
+</script>
+
+  <div > <textarea id="message"rows="10" cols="40" wrap="hard | physical" onkeydown="usl(this.value, event)" onkeypress="test(this.value, event)" placeholder="Введите здесь ваше сообщение"></textarea><br><br> 
+  <img src="http://i.smiles2k.net/aiwan_smiles/blink.gif"/>
+  <img src="http://i.smiles2k.net/aiwan_smiles/no.gif"/>
+  <img src="http://i.smiles2k.net/aiwan_smiles/king.gif"/>
+  <img src="http://i.smiles2k.net/aiwan_smiles/yes2.gif"/>
+  <img src="http://i.smiles2k.net/aiwan_smiles/shok.gif"/>
+  <img src="http://i.smiles2k.net/aiwan_smiles/angry2.gif"/>
+  <img src="http://i.smiles2k.net/aiwan_smiles/mda.gif"/>
+  <img src="http://i.smiles2k.net/aiwan_smiles/new_russian.gif"/>
+  
+  
+  
+  </div>
+   
+    <input type="submit" onclick="send();" value="Отправить сообщение"><br><br>  <!-- submit - потдвердрить -->
+ <audio id="player" src="sonic_ring.mp3"></audio>
+
+ <!--<audio src="sonic_ring.mp3" autoplay></audio> -->
+   
+   <div id="send_message_result"></div><!--определяем участок и назначаем ему ид -->
+    <hr><!--линия-->
+    <div  id="messages" class="blockkk"></div>
+	
+  </body>
+</html>
